@@ -1,0 +1,5 @@
+# Local-only Claude Code permissions / overrides
+.claude/
+
+# OS cruft
+.DS_Store

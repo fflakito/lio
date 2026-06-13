@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JGIO — Just Get It Out</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="decay"></div>
+<canvas id="confetti"></canvas>
+<button type="button" id="theme-fab" title="Theme"></button>
+
+<!-- SETUP -->
+<section class="screen" id="setup-screen">
+  <div class="card">
+    <h1><span class="mark">JGIO</span></h1>
+    <p class="tagline">Just Get It Out</p>
+    <p class="sub">Don't stop to edit, don't read back — just keep the words coming. Pause too long and the page clears itself, so trust your momentum. Reach your goal and your words are yours to keep.</p>
+
+    <div class="group">
+      <div class="label">Goal type</div>
+      <div class="seg" id="mode-seg">
+        <button data-mode="time" class="active">Time</button>
+        <button data-mode="words">Word count</button>
+      </div>
+    </div>
+
+    <div class="group" id="time-group">
+      <div class="label">Minutes</div>
+      <div class="opts" data-target="time">
+        <div class="opt" data-val="1">1</div>
+        <div class="opt active" data-val="3">3</div>
+        <div class="opt" data-val="5">5</div>
+        <div class="opt" data-val="10">10</div>
+      </div>
+    </div>
+
+    <div class="group hidden" id="words-group">
+      <div class="label">Words</div>
+      <div class="opts" data-target="words">
+        <div class="opt" data-val="25">25</div>
+        <div class="opt active" data-val="100">100</div>
+        <div class="opt" data-val="250">250</div>
+        <div class="opt" data-val="500">500</div>
+      </div>
+    </div>
+
+    <div class="links">
+      <button type="button" class="ghost-link" id="prompt-trigger">✨ Need a prompt?</button>
+      <button type="button" class="ghost-link" id="options-toggle">Options <span class="chev">▾</span></button>
+    </div>
+
+    <div id="options-panel" class="hidden">
+      <div class="group">
+        <div class="label">Pause window</div>
+        <div class="opts" data-target="grace">
+          <div class="opt" data-val="3">3s</div>
+          <div class="opt active" data-val="5">5s</div>
+          <div class="opt" data-val="7">7s</div>
+          <div class="opt" data-val="10">10s</div>
+        </div>
+      </div>
+
+      <div class="group toggle-row">
+        <div class="tlabel">
+          <strong>Blur mode</strong>
+          <small>Hides your words as you write, so you can't stop to fix them — pure forward flow.</small>
+        </div>
+        <label class="switch"><input type="checkbox" id="hardcore-toggle"><span class="slider"></span></label>
+      </div>
+
+      <div class="group toggle-row">
+        <div class="tlabel">
+          <strong>Typewriter scrolling</strong>
+          <small>Keeps the line you're writing vertically centred, so your eyes stay in one calm spot.</small>
+        </div>
+        <label class="switch"><input type="checkbox" id="typewriter-toggle"><span class="slider"></span></label>
+      </div>
+
+      <div class="group">
+        <div class="label">Theme</div>
+        <div class="seg" id="theme-seg">
+          <button data-theme="dark" class="active">Dark</button>
+          <button data-theme="sepia">Sepia</button>
+          <button data-theme="light">Light</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="label">Writing font</div>
+        <div class="seg" id="font-seg">
+          <button data-font="serif" class="active">Serif</button>
+          <button data-font="sans">Sans</button>
+          <button data-font="mono">Mono</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="start" id="start-btn">Get it out →</button>
+    <button type="button" id="progress-summary" class="progress-summary"></button>
+  </div>
+</section>
+
+<!-- PROMPT POPOVER -->
+<div class="modal-backdrop hidden" id="prompt-modal">
+  <div class="modal">
+    <div class="label">Writing prompt</div>
+    <div class="seg" id="prompt-seg">
+      <button data-cat="none" class="active">None</button>
+      <button data-cat="freewrite">Freewrite</button>
+      <button data-cat="fiction">Fiction</button>
+      <button data-cat="journal">Journal</button>
+    </div>
+    <div id="prompt-box" class="hidden">
+      <p id="prompt-text"></p>
+      <button id="prompt-shuffle">↻ Give me another</button>
+    </div>
+    <button class="start" id="prompt-done">Done</button>
+  </div>
+</div>
+
+<!-- PROGRESS / STATS POPOVER -->
+<div class="modal-backdrop hidden" id="stats-modal">
+  <div class="modal">
+    <div class="label">Your progress</div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="hist-label">Recent sessions</div>
+    <div id="hist-list"></div>
+    <button class="start" id="stats-done">Done</button>
+  </div>
+</div>
+
+<!-- WRITE -->
+<section class="screen hidden" id="write-screen">
+  <button class="quit" id="quit-btn">Stop</button>
+  <div id="hud">
+    <div class="stat" id="goalflash"></div>
+    <div class="stat" id="progress"></div>
+  </div>
+  <div id="write-prompt" class="hidden"></div>
+  <textarea id="editor" placeholder="Start typing — just let it out…" spellcheck="false"></textarea>
+</section>
+<div id="flash"></div>
+
+<!-- END -->
+<section class="screen hidden" id="end-screen">
+  <div class="card end" id="end-card" style="text-align:center">
+    <h2 id="end-title"></h2>
+    <p id="end-msg"></p>
+    <p id="end-streak" class="streak hidden"></p>
+    <div id="preview"></div>
+    <div class="actions">
+      <button class="primary" id="copy-btn">Copy text</button>
+      <button id="download-btn">Download .txt</button>
+      <button id="download-md-btn">Download .md</button>
+      <button id="again-btn">New session</button>
+    </div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
