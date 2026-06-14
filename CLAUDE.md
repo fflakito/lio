@@ -1,15 +1,15 @@
-# CLAUDE.md — JGIO (Just Get It Out)
+# CLAUDE.md — LIO (Let It Out)
 
 Context for future Claude Code sessions. Read this first.
 
 ## What this is
 
-**JGIO — Just Get It Out** is a local, browser-based free-writing app. It's a
+**LIO — Let It Out** is a local, browser-based free-writing app. It's a
 positively-reframed clone of "The Most Dangerous Writing App": you pick a goal
 (time or word count), then **keep typing**. If you pause longer than the *pause
 window*, the page clears itself. Reach the goal and your words are yours to keep.
 
-The original is fear-framed ("everything vanishes", "panic threshold"). JGIO is
+The original is fear-framed ("everything vanishes", "panic threshold"). LIO is
 deliberately encouraging — momentum-green palette, gentle copy, confetti on
 success. Keep that tone in any new copy.
 
@@ -52,10 +52,11 @@ success. Keep that tone in any new copy.
 - **State as body classes:** `hardcore` (blur mode), `typewriter` (centred-line
   scrolling), `low` (momentum low), `theme-*`, `font-*`.
 - **Persistence:** `localStorage` only.
-  - `jgio.settings` — setup preferences (mode, timeVal, wordVal, graceMs,
+  - `lio.settings` — setup preferences (mode, timeVal, wordVal, graceMs,
     hardcore, typewriter, promptCat, theme, font). Saved on every change,
-    restored in `loadSettings()`.
-  - `jgio.history` — array of completed sessions `{t, won, words, goalType,
+    restored in `loadSettings()`. (`migrateStorage()` copies the legacy
+    `jgio.*` keys over on first load after the JGIO → LIO rename.)
+  - `lio.history` — array of completed sessions `{t, won, words, goalType,
     goalVal, durationMs}`, capped at 200. Drives the progress modal + streaks.
   - A session is only logged when it reaches a terminal state (win or
     clear/Stop). Starting then reloading records nothing — by design.
@@ -64,7 +65,7 @@ success. Keep that tone in any new copy.
 ## Running / previewing
 
 - Quickest for the user: open `index.html` in a browser.
-- For driving/testing in-session: `preview_start` with the `jgio` config in
+- For driving/testing in-session: `preview_start` with the `lio` config in
   `.claude/launch.json` (a tiny Node static server on port 4599), then
   `preview_eval` to inspect/drive the page. To test a win fast, use the **25-word**
   goal: set words mode, click `25`, start, set `#editor` value to 30+ words and
@@ -77,6 +78,6 @@ success. Keep that tone in any new copy.
 ## Status
 
 Done: writing prompts, adjustable pause window, settings persistence, session
-history + streaks/stats, JGIO rebrand, themes + fonts, corner theme toggle,
+history + streaks/stats, LIO rebrand, themes + fonts, corner theme toggle,
 file split, Markdown export, typewriter scrolling. See `ROADMAP.md` for what's
 next (custom goals, .docx/append export, PWA, etc.).

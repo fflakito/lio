@@ -1,4 +1,4 @@
-# JGIO — Just Get It Out — Feature Roadmap
+# LIO — Let It Out — Feature Roadmap
 
 Ideas for future versions. ★ = recommended priority for v2.
 

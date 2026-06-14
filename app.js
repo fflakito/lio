@@ -71,7 +71,7 @@
   }
 
   // ---- Persistence ----
-  const LS_KEY = 'jgio.settings';
+  const LS_KEY = 'lio.settings';
   function saveSettings() {
     try {
       localStorage.setItem(LS_KEY, JSON.stringify({ mode, timeVal, wordVal, graceMs, hardcore, typewriter, promptCat, theme, font }));
@@ -84,7 +84,18 @@
   }
 
   // ---- Session history ----
-  const HIST_KEY = 'jgio.history';
+  const HIST_KEY = 'lio.history';
+  // One-time migration from the old "jgio.*" keys (app renamed JGIO → LIO).
+  function migrateStorage() {
+    try {
+      [['jgio.settings', LS_KEY], ['jgio.history', HIST_KEY]].forEach(([oldK, newK]) => {
+        if (localStorage.getItem(newK) === null) {
+          const v = localStorage.getItem(oldK);
+          if (v !== null) localStorage.setItem(newK, v);
+        }
+      });
+    } catch (e) { /* storage unavailable — ignore */ }
+  }
   function loadHistory() {
     try { const h = JSON.parse(localStorage.getItem(HIST_KEY)); return Array.isArray(h) ? h : []; }
     catch (e) { return []; }
@@ -360,6 +371,7 @@
       [...fontSeg.children].forEach(b => b.classList.toggle('active', b.dataset.font === font));
     }
   }
+  migrateStorage();
   loadSettings();
   applyTheme();
   applyFont();
@@ -542,9 +554,9 @@
     return lines.join('\n');
   }
   $('#download-btn').addEventListener('click', () =>
-    downloadFile('jgio-session.txt', window.__saved || '', 'text/plain'));
+    downloadFile('lio-session.txt', window.__saved || '', 'text/plain'));
   $('#download-md-btn').addEventListener('click', () =>
-    downloadFile('jgio-session.md', buildMarkdown(window.__saved || '', window.__savedMeta || {}), 'text/markdown'));
+    downloadFile('lio-session.md', buildMarkdown(window.__saved || '', window.__savedMeta || {}), 'text/markdown'));
 
   // warn before accidental nav loss mid-session
   window.addEventListener('beforeunload', e => {
