@@ -81,4 +81,6 @@ Done: writing prompts, adjustable pause window, settings persistence, session
 history + streaks/stats, LIO rebrand, themes + fonts (in the Options "Visual
 settings" section), file split, Markdown export, typewriter scrolling, and a
 bolder editorial setup screen. See `ROADMAP.md` for what's next (custom goals,
-.docx/append export, PWA, etc.).
+.docx/append export, PWA, etc.). The setup, end (win/cleared) and progress
+screens share a "Momentum" editorial look — big serif headlines, accent sweep
+rules, atmospheric glows, and staggered reveals, all scoped per-screen.

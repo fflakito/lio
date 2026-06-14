@@ -60,10 +60,11 @@ body.low #decay { background: var(--warn); }
 /* ---- Setup ---- */
 .card {
   background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border));
+  border-radius: 18px;
   padding: 40px 44px;
   width: min(92vw, 540px);
+  box-shadow: 0 30px 80px -46px rgba(0, 0, 0, .5);
 }
 .card h1 { font-size: 26px; font-weight: 600; letter-spacing: -.5px; }
 .card h1 .mark { color: var(--accent); }
@@ -108,8 +109,9 @@ body.low #decay { background: var(--warn); }
   display: flex; align-items: center; justify-content: center; z-index: 100;
 }
 .modal {
-  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
-  padding: 28px 30px; width: min(92vw, 480px);
+  background: var(--panel); border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border)); border-radius: 18px;
+  padding: 30px 32px; width: min(92vw, 480px);
+  box-shadow: 0 40px 90px -50px rgba(0, 0, 0, .6);
 }
 .modal .start { margin-top: 22px; }
 
@@ -304,4 +306,86 @@ body.hardcore #flash { display: flex; }
 
 @media (prefers-reduced-motion: reduce) {
   #setup-screen .card > *, #setup-screen h1.hero::after, #setup-screen .start .arr { animation: none; transition: none; }
+}
+
+/* ============================================================
+   End screen — "Momentum" refresh. The card already toggles
+   .win / .lose, so the accent sweep + colours follow the result.
+   The screen atmosphere stays accent-green for both outcomes
+   (the app is deliberately encouraging); only the headline and
+   sweep turn amber on a cleared page.
+   ============================================================ */
+#setup-screen::before, #end-screen::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+#end-screen {
+  overflow-y: auto; padding-block: 28px;
+  background: radial-gradient(120% 78% at 50% -12%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 60%);
+}
+#end-screen .card.end { position: relative; z-index: 1; margin: auto; }
+
+#end-screen #end-title {
+  font-family: var(--font-write); font-weight: 600;
+  font-size: clamp(30px, 4.6vw, 44px); line-height: 1.06; letter-spacing: -.02em;
+}
+#end-screen #end-title::after {
+  content: ""; display: block; height: 3px; width: 60px; margin: 18px auto 0; border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+#end-card.lose #end-title::after { background: linear-gradient(90deg, transparent, var(--warn), transparent); }
+
+#end-screen .streak {
+  display: inline-block; margin-top: 16px; padding: 7px 16px; border-radius: 999px;
+  font-size: 13.5px; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+#end-screen .actions { margin-top: 26px; }
+#end-screen .actions button { border-radius: 11px; }
+#end-screen .actions button:hover { transform: translateY(-1px); filter: brightness(1.08); }
+#end-screen .actions button.primary { box-shadow: 0 13px 30px -15px var(--accent); }
+#end-screen #preview { border-radius: 14px; border-color: color-mix(in srgb, var(--accent) 10%, var(--border)); }
+
+#end-screen .card.end > * { animation: lio-rise .5s both cubic-bezier(.2, .7, .2, 1); }
+#end-screen .card.end > *:nth-child(1) { animation-delay: .04s; }
+#end-screen .card.end > *:nth-child(2) { animation-delay: .11s; }
+#end-screen .card.end > *:nth-child(3) { animation-delay: .18s; }
+#end-screen .card.end > *:nth-child(4) { animation-delay: .25s; }
+#end-screen .card.end > *:nth-child(n+5) { animation-delay: .32s; }
+
+/* ============================================================
+   Modals — gentle pop-in, plus an editorial pass on the
+   progress / stats panel (momentum-tick headings, serif numbers).
+   ============================================================ */
+.modal-backdrop { animation: lio-fade .25s both; }
+.modal { animation: lio-pop .35s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes lio-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lio-pop { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
+
+#stats-modal .modal { position: relative; overflow: hidden; }
+#stats-modal .modal::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 130px; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%);
+}
+#stats-modal .modal > * { position: relative; }
+#stats-modal .label, #stats-modal .hist-label { display: flex; align-items: center; gap: 10px; }
+#stats-modal .label::before, #stats-modal .hist-label::before {
+  content: ""; width: 18px; height: 2px; border-radius: 2px; background: var(--accent); flex: none;
+}
+#stats-modal .stat-cell {
+  border-radius: 13px; padding: 16px 18px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 13%, var(--border));
+}
+#stats-modal .stat-cell .num {
+  font-family: var(--font-write); font-size: 30px; font-weight: 600; letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #end-screen .card.end > *, #end-screen #end-title::after,
+  .modal-backdrop, .modal { animation: none; }
+  #end-screen .actions button:hover { transform: none; }
 }
