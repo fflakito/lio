@@ -9,13 +9,12 @@
 <body>
 <div id="decay"></div>
 <canvas id="confetti"></canvas>
-<button type="button" id="theme-fab" title="Theme"></button>
 
 <!-- SETUP -->
 <section class="screen" id="setup-screen">
   <div class="card">
-    <h1><span class="mark">LIO</span></h1>
-    <p class="tagline">Let It Out</p>
+    <div class="eyebrow"><span class="mark">LIO</span> · free-writing</div>
+    <h1 class="hero">Let it out<span class="dot">.</span></h1>
     <p class="sub">Don't stop to edit, don't read back — just keep the words coming. Pause too long and the page clears itself, so trust your momentum. Reach your goal and your words are yours to keep.</p>
 
     <div class="group">
@@ -79,25 +78,27 @@
       </div>
 
       <div class="group">
-        <div class="label">Theme</div>
-        <div class="seg" id="theme-seg">
-          <button data-theme="dark" class="active">Dark</button>
-          <button data-theme="sepia">Sepia</button>
-          <button data-theme="light">Light</button>
+        <div class="label">Visual settings</div>
+        <div class="vis-row">
+          <span class="vis-key">Theme</span>
+          <div class="seg" id="theme-seg">
+            <button data-theme="dark" class="active">Dark</button>
+            <button data-theme="sepia">Sepia</button>
+            <button data-theme="light">Light</button>
+          </div>
         </div>
-      </div>
-
-      <div class="group">
-        <div class="label">Writing font</div>
-        <div class="seg" id="font-seg">
-          <button data-font="serif" class="active">Serif</button>
-          <button data-font="sans">Sans</button>
-          <button data-font="mono">Mono</button>
+        <div class="vis-row">
+          <span class="vis-key">Font</span>
+          <div class="seg" id="font-seg">
+            <button data-font="serif" class="active">Serif</button>
+            <button data-font="sans">Sans</button>
+            <button data-font="mono">Mono</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <button class="start" id="start-btn">Get it out →</button>
+    <button class="start" id="start-btn">Get it out <span class="arr">→</span></button>
     <button type="button" id="progress-summary" class="progress-summary"></button>
   </div>
 </section>
@@ -108,9 +109,9 @@
     <div class="label">Writing prompt</div>
     <div class="seg" id="prompt-seg">
       <button data-cat="none" class="active">None</button>
-      <button data-cat="freewrite">Freewrite</button>
-      <button data-cat="fiction">Fiction</button>
       <button data-cat="journal">Journal</button>
+      <button data-cat="fiction">Fiction</button>
+      <button data-cat="freewrite">Random</button>
     </div>
     <div id="prompt-box" class="hidden">
       <p id="prompt-text"></p>

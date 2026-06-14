@@ -161,15 +161,10 @@
     optToggle.classList.toggle('open', open);
   });
 
-  // ---- Theme & font ----
-  const THEME_ORDER = ['dark', 'sepia', 'light'];
-  const THEME_ICONS = { dark: '🌙', sepia: '📜', light: '☀️' };
+  // ---- Theme & font ---- (both live in the Options "Visual settings" section)
   const themeSeg = $('#theme-seg');
-  const themeFab = $('#theme-fab');
   function updateThemeUI() {
     [...themeSeg.children].forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
-    themeFab.textContent = THEME_ICONS[theme];
-    themeFab.title = 'Theme: ' + theme[0].toUpperCase() + theme.slice(1) + ' — click to switch';
   }
   function setTheme(t) {
     theme = t;
@@ -181,10 +176,6 @@
     const b = e.target.closest('button'); if (!b) return;
     setTheme(b.dataset.theme);
   });
-  themeFab.addEventListener('click', () => {
-    const i = THEME_ORDER.indexOf(theme);
-    setTheme(THEME_ORDER[(i + 1) % THEME_ORDER.length]);
-  });
   const fontSeg = $('#font-seg');
   fontSeg.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
@@ -195,7 +186,7 @@
   });
 
   // ---- Prompt picker (in modal) ----
-  const CAT_LABELS = { freewrite: 'Freewrite', fiction: 'Fiction', journal: 'Journal' };
+  const CAT_LABELS = { freewrite: 'Random', fiction: 'Fiction', journal: 'Journal' };
   const promptSeg = $('#prompt-seg');
   const promptTrigger = $('#prompt-trigger');
 
@@ -364,7 +355,6 @@
     }
     if (['dark', 'sepia', 'light'].includes(s.theme)) {
       theme = s.theme;
-      [...themeSeg.children].forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
     }
     if (['serif', 'sans', 'mono'].includes(s.font)) {
       font = s.font;
@@ -412,7 +402,6 @@
 
   function start() {
     finished = false;
-    themeFab.style.display = 'none';
     document.body.classList.toggle('hardcore', hardcore);
     document.body.classList.toggle('typewriter', typewriter);
     editor.value = '';
@@ -490,7 +479,6 @@
 
   function showEnd(won, text) {
     document.body.classList.remove('hardcore', 'typewriter');
-    themeFab.style.display = '';
     $('#write-screen').classList.add('hidden');
     const card = $('#end-card');
     card.classList.toggle('win', won);

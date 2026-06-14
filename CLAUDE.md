@@ -78,6 +78,7 @@ success. Keep that tone in any new copy.
 ## Status
 
 Done: writing prompts, adjustable pause window, settings persistence, session
-history + streaks/stats, LIO rebrand, themes + fonts, corner theme toggle,
-file split, Markdown export, typewriter scrolling. See `ROADMAP.md` for what's
-next (custom goals, .docx/append export, PWA, etc.).
+history + streaks/stats, LIO rebrand, themes + fonts (in the Options "Visual
+settings" section), file split, Markdown export, typewriter scrolling, and a
+bolder editorial setup screen. See `ROADMAP.md` for what's next (custom goals,
+.docx/append export, PWA, etc.).
