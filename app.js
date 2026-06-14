@@ -369,7 +369,7 @@
   refreshProgressSummary();
 
   // ---- Session state ----
-  let lastKey = 0, startTime = 0, raf = 0, finished = false;
+  let lastKey = 0, startTime = 0, raf = 0, finished = false, started = false;
   const editor = $('#editor');
   const decay = $('#decay');
   const flash = $('#flash');
@@ -417,7 +417,10 @@
     }
     editor.focus();
     centerCaret();
-    startTime = lastKey = performance.now();
+    // Armed, but nothing counts down until the first keystroke.
+    started = false;
+    startTime = lastKey = 0;
+    document.body.classList.add('armed');
     if (mode === 'time') $('#goalflash').textContent = 'Goal: ' + timeVal + ' min';
     else $('#goalflash').textContent = 'Goal: ' + wordVal + ' words';
     loop();
@@ -425,6 +428,17 @@
 
   function loop() {
     raf = requestAnimationFrame(loop);
+    if (!started) {
+      // waiting for the first keystroke — momentum stays full, clock paused
+      decay.style.transform = 'scaleX(1)';
+      if (mode === 'time') {
+        const s = timeVal * 60;
+        $('#progress').innerHTML = '<strong>' + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') + '</strong> left';
+      } else {
+        $('#progress').innerHTML = '<strong>0</strong> / ' + wordVal + ' words';
+      }
+      return;
+    }
     const now = performance.now();
     const idle = now - lastKey;
     const remain = Math.max(0, graceMs - idle);
@@ -451,6 +465,7 @@
 
   function onType(e) {
     if (finished) return;
+    if (!started) { started = true; startTime = performance.now(); document.body.classList.remove('armed'); }
     lastKey = performance.now();
     if (hardcore) {
       const ch = (e.data && e.data.trim()) ? e.data : (e.inputType === 'insertLineBreak' ? '↵' : '·');
@@ -460,7 +475,7 @@
   }
   editor.addEventListener('input', onType);
 
-  function stop() { cancelAnimationFrame(raf); document.body.classList.remove('low'); }
+  function stop() { cancelAnimationFrame(raf); document.body.classList.remove('low', 'armed'); }
 
   function win() {
     if (finished) return; finished = true; stop();
@@ -517,7 +532,19 @@
     refreshProgressSummary();
     $('#setup-screen').classList.remove('hidden');
   });
-  $('#quit-btn').addEventListener('click', () => { if (!finished) lose(); });
+  $('#quit-btn').addEventListener('click', () => {
+    if (finished) return;
+    if (!started) {
+      // never began — slip back to setup, record nothing
+      stop();
+      document.body.classList.remove('hardcore', 'typewriter');
+      $('#write-screen').classList.add('hidden');
+      refreshProgressSummary();
+      $('#setup-screen').classList.remove('hidden');
+      return;
+    }
+    lose();
+  });
   $('#copy-btn').addEventListener('click', () => {
     navigator.clipboard.writeText(window.__saved || '').then(() => {
       $('#copy-btn').textContent = 'Copied!';

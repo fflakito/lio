@@ -18,6 +18,10 @@ success. Keep that tone in any new copy.
 - A `requestAnimationFrame` loop (`loop()` in `app.js`) tracks idle time since the
   last keystroke. The top **momentum bar** (`#decay`) drains as you idle and turns
   amber (`body.low`) when low.
+- Nothing counts down until the **first keystroke**: `start()` leaves the session
+  `armed` (`body.armed`, bar full + breathing, clock parked) and `started=false`;
+  the first `onType()` sets `started=true` + `startTime`. Hitting Stop while still
+  armed slips back to setup and records nothing.
 - Idle ≥ `graceMs` → `lose()` (page clears). Goal reached → `win()`.
 - `win()`/`lose()` both call `recordSession()` then `showEnd()`. A win fires
   `celebrate()` (confetti) and auto-opens the progress modal.
@@ -50,7 +54,8 @@ success. Keep that tone in any new copy.
   `var(--on-accent)`, `var(--glow)`, etc.), never hardcoded hex. This keeps all
   three themes working for free.
 - **State as body classes:** `hardcore` (blur mode), `typewriter` (centred-line
-  scrolling), `low` (momentum low), `theme-*`, `font-*`.
+  scrolling), `armed` (session waiting for the first keystroke), `low` (momentum
+  low), `theme-*`, `font-*`.
 - **Persistence:** `localStorage` only.
   - `lio.settings` — setup preferences (mode, timeVal, wordVal, graceMs,
     hardcore, typewriter, promptCat, theme, font). Saved on every change,
@@ -70,6 +75,11 @@ success. Keep that tone in any new copy.
   `preview_eval` to inspect/drive the page. To test a win fast, use the **25-word**
   goal: set words mode, click `25`, start, set `#editor` value to 30+ words and
   dispatch an `input` event.
+- **Preview gotcha:** the preview tab is usually `document.hidden`, so its
+  `requestAnimationFrame` is paused and `loop()` won't tick — a session won't
+  win/lose on its own. A `preview_screenshot` forces a frame, which lets the loop
+  advance once (enough to fire a met win condition). Drive a clear/Stop directly
+  via the `#quit-btn` instead of waiting on the idle timer.
 - After editing `.claude/server.js`, restart the server (`preview_stop` +
   `preview_start`) — the process caches its own code.
 - JS sanity check without a browser:
@@ -79,8 +89,11 @@ success. Keep that tone in any new copy.
 
 Done: writing prompts, adjustable pause window, settings persistence, session
 history + streaks/stats, LIO rebrand, themes + fonts (in the Options "Visual
-settings" section), file split, Markdown export, typewriter scrolling, and a
-bolder editorial setup screen. See `ROADMAP.md` for what's next (custom goals,
-.docx/append export, PWA, etc.). The setup, end (win/cleared) and progress
-screens share a "Momentum" editorial look — big serif headlines, accent sweep
-rules, atmospheric glows, and staggered reveals, all scoped per-screen.
+settings" section), file split, Markdown export, typewriter scrolling, and the
+"start the clock on first keystroke" arming step. See `ROADMAP.md` for what's
+next (custom goals, .docx/append export, PWA, etc.).
+
+All four screens — setup, writing, end (win/cleared), and progress — share a
+"Momentum" editorial look: big serif headlines, accent "sweep" rules and ticks,
+a glowing momentum bar, atmospheric glows (not on the writing surface, which
+stays clean for focus), and staggered reveals — all scoped per-screen.
