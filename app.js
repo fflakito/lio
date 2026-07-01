@@ -559,6 +559,13 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
+  function sessionFileName(ext) {
+    const d = new Date((window.__savedMeta || {}).when || Date.now());
+    const p = n => String(n).padStart(2, '0');
+    const stamp = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+      '-' + p(d.getHours()) + p(d.getMinutes());
+    return 'LetItOut_writing_session_' + stamp + '.' + ext;
+  }
   function buildMarkdown(text, meta) {
     const d = new Date(meta.when || Date.now());
     const date = MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
@@ -569,9 +576,9 @@
     return lines.join('\n');
   }
   $('#download-btn').addEventListener('click', () =>
-    downloadFile('lio-session.txt', window.__saved || '', 'text/plain'));
+    downloadFile(sessionFileName('txt'), window.__saved || '', 'text/plain'));
   $('#download-md-btn').addEventListener('click', () =>
-    downloadFile('lio-session.md', buildMarkdown(window.__saved || '', window.__savedMeta || {}), 'text/markdown'));
+    downloadFile(sessionFileName('md'), buildMarkdown(window.__saved || '', window.__savedMeta || {}), 'text/markdown'));
 
   // warn before accidental nav loss mid-session
   window.addEventListener('beforeunload', e => {
