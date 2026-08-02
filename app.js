@@ -252,6 +252,7 @@
   function openStats() { renderStats(); statsModal.classList.remove('hidden'); }
   $('#stats-done').addEventListener('click', closeStats);
   statsModal.addEventListener('click', e => { if (e.target === statsModal) closeStats(); });
+  $('#end-progress-btn').addEventListener('click', openStats);
 
   // discreet progress entry under the Begin button
   const progressSummary = $('#progress-summary');
@@ -369,7 +370,7 @@
   refreshProgressSummary();
 
   // ---- Session state ----
-  let lastKey = 0, startTime = 0, raf = 0, finished = false, started = false;
+  let lastKey = 0, startTime = 0, raf = 0, finished = false, started = false, overtime = false;
   const editor = $('#editor');
   const decay = $('#decay');
   const flash = $('#flash');
@@ -402,6 +403,8 @@
 
   function start() {
     finished = false;
+    overtime = false;
+    $('#quit-btn').textContent = 'Stop';
     document.body.classList.toggle('hardcore', hardcore);
     document.body.classList.toggle('typewriter', typewriter);
     editor.value = '';
@@ -437,6 +440,12 @@
       } else {
         $('#progress').innerHTML = '<strong>0</strong> / ' + wordVal + ' words';
       }
+      return;
+    }
+    if (overtime) {
+      // goal reached — the page can't clear anymore, just keep the count live
+      decay.style.transform = 'scaleX(1)';
+      $('#progress').innerHTML = '<strong>' + countWords(editor.value) + '</strong> words — keep going';
       return;
     }
     const now = performance.now();
@@ -475,13 +484,43 @@
   }
   editor.addEventListener('input', onType);
 
-  function stop() { cancelAnimationFrame(raf); document.body.classList.remove('low', 'armed'); }
+  function stop() { cancelAnimationFrame(raf); document.body.classList.remove('low', 'armed', 'done'); }
 
+  // Goal reached → "overtime": stay in the editor, celebrate in place, and let
+  // the writer keep typing for as long as they like. The win is logged right
+  // away (so it counts even if they close the tab) and the entry is updated
+  // with the final word count when they hit Finish.
+  const winNote = $('#win-note');
+  let winNoteT = 0;
   function win() {
+    if (finished || overtime) return;
+    overtime = true;
+    recordSession(true, countWords(editor.value), performance.now() - startTime);
+    document.body.classList.remove('low');
+    document.body.classList.add('done');
+    $('#goalflash').textContent = 'Goal reached 🎉';
+    $('#quit-btn').textContent = 'Finish ✓';
+    winNote.classList.remove('hidden');
+    clearTimeout(winNoteT);
+    winNoteT = setTimeout(() => winNote.classList.add('hidden'), 6500);
+    celebrate();
+  }
+  function updateLastSession(words, durationMs) {
+    const hist = loadHistory();
+    const last = hist[hist.length - 1];
+    if (last && last.won) {
+      last.words = words;
+      last.durationMs = Math.round(durationMs);
+      try { localStorage.setItem(HIST_KEY, JSON.stringify(hist)); } catch (e) { /* ignore */ }
+    }
+  }
+  function finish() {
     if (finished) return; finished = true; stop();
+    clearTimeout(winNoteT);
+    winNote.classList.add('hidden');
     const text = editor.value;
     const dur = performance.now() - startTime;
-    recordSession(true, countWords(text), dur);
+    updateLastSession(countWords(text), dur);
     window.__savedMeta = { prompt: promptText, when: Date.now(), durationMs: dur };
     showEnd(true, text);
   }
@@ -511,8 +550,6 @@
       const streak = $('#end-streak');
       streak.textContent = cur > 1 ? '🔥 ' + cur + ' in a row!' : 'First one down — keep it going.';
       streak.classList.remove('hidden');
-      celebrate();
-      openStats();
     } else {
       $('#end-streak').classList.add('hidden');
       $('#end-title').textContent = 'The page cleared.';
@@ -534,6 +571,7 @@
   });
   $('#quit-btn').addEventListener('click', () => {
     if (finished) return;
+    if (overtime) return finish();
     if (!started) {
       // never began — slip back to setup, record nothing
       stop();

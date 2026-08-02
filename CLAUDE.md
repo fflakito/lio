@@ -23,8 +23,14 @@ success. Keep that tone in any new copy.
   the first `onType()` sets `started=true` + `startTime`. Hitting Stop while still
   armed slips back to setup and records nothing.
 - Idle ≥ `graceMs` → `lose()` (page clears). Goal reached → `win()`.
-- `win()`/`lose()` both call `recordSession()` then `showEnd()`. A win fires
-  `celebrate()` (confetti) and auto-opens the progress modal.
+- `win()` does NOT interrupt the writer: it enters **overtime** (`body.done`) —
+  confetti fires in place, the bar locks full, the pause window is disarmed, a
+  one-time toast (`#win-note`) fades through, and Stop becomes a "Finish ✓"
+  pill. The win is `recordSession()`-ed immediately (so it counts even if the
+  tab closes) and `updateLastSession()` rewrites the entry's words/duration
+  when the writer clicks Finish → `finish()` → `showEnd(true, …)`.
+- `lose()` calls `recordSession()` then `showEnd(false, '')`. The progress
+  modal never auto-opens; the end card has a "📊 Progress" button instead.
 
 ## Files
 

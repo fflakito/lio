@@ -55,6 +55,8 @@ body.low #decay { background: var(--warn); box-shadow: 0 0 12px color-mix(in srg
 /* armed: full momentum, gently breathing while it waits for the first keystroke */
 body.armed #decay { animation: lio-breathe 2.4s ease-in-out infinite; }
 @keyframes lio-breathe { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+/* done (overtime): goal reached, the bar locks full and glows brighter */
+body.done #decay { box-shadow: 0 0 20px var(--accent); }
 
 /* ---- Screens ---- */
 .screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
@@ -226,6 +228,31 @@ body.hardcore #flash { display: flex; }
   font-size: 13px; letter-spacing: .3px; transition: color .15s;
 }
 .quit:hover { color: var(--ink); }
+/* overtime: the quiet Stop link becomes the inviting Finish pill */
+body.done .quit {
+  background: var(--accent); color: var(--on-accent); font-weight: 600;
+  font-size: 14px; padding: 11px 22px; border-radius: 999px;
+  box-shadow: 0 14px 30px -14px var(--accent);
+}
+body.done .quit:hover { color: var(--on-accent); filter: brightness(1.08); }
+
+/* one-time "goal reached" toast during overtime — fades in, lingers, fades out */
+#win-note {
+  position: fixed; top: 22px; left: 50%; z-index: 60;
+  max-width: 92vw; text-align: center; pointer-events: none;
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  color: var(--ink); font-size: 13.5px; padding: 10px 22px; border-radius: 999px;
+  animation: lio-note 6.4s both;
+}
+@keyframes lio-note {
+  0% { opacity: 0; transform: translate(-50%, -10px); }
+  6%, 90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #win-note { animation: lio-fade .25s both; transform: translate(-50%, 0); }
+}
 
 /* ============================================================
    Setup screen — "Momentum" refresh (scoped to #setup-screen so
