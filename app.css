@@ -42,21 +42,24 @@ body {
 }
 
 /* ---- Momentum bar ---- */
+/* Deliberately faint while momentum is healthy — it should sit at the edge of
+   awareness, not loom. loop() fades it up only as the pause window drains. */
 #decay {
-  position: fixed; top: 0; left: 0; height: 4px; width: 100%;
+  position: fixed; top: 0; left: 0; height: 3px; width: 100%;
   background: var(--accent);
   transform-origin: left center;
   transform: scaleX(0);
-  transition: background-color .25s linear;
+  opacity: .32;
+  transition: background-color .25s linear, opacity .2s linear, box-shadow .25s linear;
   z-index: 50;
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
 }
-body.low #decay { background: var(--warn); box-shadow: 0 0 12px color-mix(in srgb, var(--warn) 55%, transparent); }
+/* the amber nudge is the one moment the bar is meant to be noticed */
+body.low #decay { background: var(--warn); box-shadow: 0 0 12px color-mix(in srgb, var(--warn) 50%, transparent); }
 /* armed: full momentum, gently breathing while it waits for the first keystroke */
 body.armed #decay { animation: lio-breathe 2.4s ease-in-out infinite; }
-@keyframes lio-breathe { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
-/* done (overtime): goal reached, the bar locks full and glows brighter */
-body.done #decay { box-shadow: 0 0 20px var(--accent); }
+@keyframes lio-breathe { 0%, 100% { opacity: .28; } 50% { opacity: .55; } }
+/* done (overtime): goal reached, the bar locks full with a soft glow */
+body.done #decay { box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent); }
 
 /* ---- Screens ---- */
 .screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
@@ -423,7 +426,7 @@ body.done .quit:hover { color: var(--on-accent); filter: brightness(1.08); }
   #end-screen .card.end > *, #end-screen #end-title::after,
   .modal-backdrop, .modal { animation: none; }
   #end-screen .actions button:hover { transform: none; }
-  body.armed #decay { animation: none; opacity: 1; }
+  body.armed #decay { animation: none; opacity: .4; }
 }
 
 /* ============================================================

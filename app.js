@@ -434,6 +434,7 @@
     if (!started) {
       // waiting for the first keystroke — momentum stays full, clock paused
       decay.style.transform = 'scaleX(1)';
+      decay.style.opacity = '';
       if (mode === 'time') {
         const s = timeVal * 60;
         $('#progress').innerHTML = '<strong>' + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') + '</strong> left';
@@ -445,6 +446,7 @@
     if (overtime) {
       // goal reached — the page can't clear anymore, just keep the count live
       decay.style.transform = 'scaleX(1)';
+      decay.style.opacity = '.5';
       $('#progress').innerHTML = '<strong>' + countWords(editor.value) + '</strong> words — keep going';
       return;
     }
@@ -453,8 +455,10 @@
     const remain = Math.max(0, graceMs - idle);
     const frac = remain / graceMs;
 
-    // decay bar shrinks as idle grows
+    // decay bar shrinks as idle grows, and only fades up as it does — full
+    // momentum should be near-invisible so the bar never nags mid-flow
     decay.style.transform = 'scaleX(' + frac + ')';
+    decay.style.opacity = (0.32 + (1 - frac) * 0.63).toFixed(3);
     document.body.classList.toggle('low', frac < 0.45);
 
     // HUD progress
