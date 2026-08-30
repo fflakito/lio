@@ -18,6 +18,9 @@ Ideas for future versions. ★ = recommended priority for v2.
 ## Polish & comfort
 - **★ Light/sepia/dark themes** + font choices (serif/mono/sans). _[✅ done — under Options, persisted; confetti is theme-aware]_
 - **Focus typewriter scrolling** — keep current line vertically centered. _[✅ done — opt-in toggle under Options; an off-screen mirror measures the caret and the editor scrolls to lock the active line at a fixed centre. Persisted in settings.]_
+- **★ Credits & lineage** — attribute The Most Dangerous Writing App as the origin of the
+  idea. _[✅ done — "Credits" link on the setup card opens a modal: Manuel Ebert's 2016
+  original, the Write or Die ancestry, and a not-affiliated / no-code-copied note]_
 - **Fullscreen mode** + ambient background options.
 - **Mobile/touch support** — tune keystroke-flash and layout for phones.
 

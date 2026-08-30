@@ -100,6 +100,11 @@
 
     <button class="start" id="start-btn">Get it out <span class="arr">→</span></button>
     <button type="button" id="progress-summary" class="progress-summary"></button>
+    <div class="card-footer">
+      <button type="button" class="footer-link" id="credits-trigger">Credits</button>
+      <span class="sep" aria-hidden="true">·</span>
+      <button type="button" class="footer-link" id="privacy-trigger">Privacy</button>
+    </div>
   </div>
 </section>
 
@@ -129,6 +134,49 @@
     <div class="hist-label">Recent sessions</div>
     <div id="hist-list"></div>
     <button class="start" id="stats-done">Done</button>
+  </div>
+</div>
+
+<!-- CREDITS POPOVER -->
+<div class="modal-backdrop hidden" id="credits-modal">
+  <div class="modal">
+    <div class="credits-body">
+      <h3>Where this came from</h3>
+      <p>The idea for LIO comes from <strong>The Most Dangerous Writing App</strong>,
+        made by <strong>Manuel Ebert</strong> and released as free, open-source software in
+        2016. Its premise: stop typing for more than a few
+        seconds and everything you've written disappears.</p>
+      <p>The original frames those stakes as fear &mdash; a panic threshold, everything vanishing.
+        LIO keeps the mechanic and drops the dread: momentum rather than panic, a goal you reach
+        rather than a punishment you dodge, and confetti when you get there.</p>
+      <p>The idea has an older ancestor too. <strong>Write or Die</strong> (2008), by Jeff Printy
+        writing as Dr Wicked, had a &ldquo;kamikaze mode&rdquo; that unwrote your words backwards
+        while you hesitated.</p>
+      <div class="credit-links">
+        <a href="https://maebert.github.io/themostdangerouswritingapp/" target="_blank" rel="noopener">The original app &#8599;</a>
+        <a href="https://github.com/maebert/themostdangerouswritingapp" target="_blank" rel="noopener">Its source on GitHub &#8599;</a>
+      </div>
+      <p class="fine">LIO is an independent project and is not affiliated with, sponsored by, or
+        endorsed by The Most Dangerous Writing App, Manuel Ebert, or Squibler (who acquired
+        the app's domain in April 2019 and maintain the version hosted there). No code was taken:
+        LIO is vanilla HTML, CSS and JavaScript.</p>
+    </div>
+    <button class="start" id="credits-done">Done</button>
+  </div>
+</div>
+
+<!-- PRIVACY POPOVER -->
+<div class="modal-backdrop hidden" id="privacy-modal">
+  <div class="modal">
+    <div class="credits-body">
+      <h3>Your words stay here</h3>
+      <p>Your words never leave your browser. Sessions and settings are kept in
+        <code>localStorage</code> on your own machine, and nothing is ever sent anywhere.</p>
+      <p class="fine">There are no accounts, no analytics and no network requests &mdash; LIO is a
+        single folder of vanilla HTML, CSS and JavaScript that runs just as well offline. Clearing
+        your browser data clears your history with it, so keep anything you want to hold on to.</p>
+    </div>
+    <button class="start" id="privacy-done">Done</button>
   </div>
 </div>
 

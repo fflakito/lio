@@ -254,6 +254,15 @@
   statsModal.addEventListener('click', e => { if (e.target === statsModal) closeStats(); });
   $('#end-progress-btn').addEventListener('click', openStats);
 
+  // ---- Credits & privacy modals (identical open/close, footer of the setup card) ----
+  ['credits', 'privacy'].forEach(name => {
+    const m = $('#' + name + '-modal');
+    const close = () => m.classList.add('hidden');
+    $('#' + name + '-trigger').addEventListener('click', () => m.classList.remove('hidden'));
+    $('#' + name + '-done').addEventListener('click', close);
+    m.addEventListener('click', e => { if (e.target === m) close(); });
+  });
+
   // discreet progress entry under the Begin button
   const progressSummary = $('#progress-summary');
   function refreshProgressSummary() {

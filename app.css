@@ -140,6 +140,24 @@ body.done #decay { box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, tr
 .hist-empty { color: var(--muted); font-size: 13px; margin-top: 12px; }
 .streak { color: var(--accent); font-weight: 600; margin-top: 12px; font-size: 15px; }
 
+/* credits */
+.credits-body { margin-top: 6px; max-height: 54vh; overflow-y: auto; padding-right: 4px; }
+.credits-body h3 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); font-weight: 600; margin-top: 22px;
+}
+.credits-body h3:first-child { margin-top: 16px; }
+.credits-body p { font-size: 13.5px; line-height: 1.62; color: var(--ink); margin-top: 10px; }
+.credits-body p.fine { font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.credits-body code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+.credit-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; }
+.credit-links a {
+  color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding-bottom: 1px; transition: border-color .15s;
+}
+.credit-links a:hover { border-bottom-color: var(--accent); }
+
 /* discreet progress entry under the Begin button */
 .progress-summary {
   display: block; width: 100%; margin-top: 16px; padding: 4px;
@@ -147,6 +165,20 @@ body.done #decay { box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, tr
   font-family: var(--font-ui); font-size: 12.5px; text-align: center; transition: color .15s;
 }
 .progress-summary:hover { color: var(--accent); }
+
+/* credits / privacy footer at the foot of the landing card */
+.card-footer {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+.footer-link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  font-family: var(--font-ui); font-size: 12px; letter-spacing: .3px;
+  color: color-mix(in srgb, var(--muted) 80%, transparent); transition: color .15s;
+}
+.footer-link:hover { color: var(--accent); }
+.card-footer .sep { color: color-mix(in srgb, var(--muted) 45%, transparent); font-size: 12px; }
 
 /* confetti overlay (above everything) */
 #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; display: none; }
@@ -421,6 +453,19 @@ body.done .quit:hover { color: var(--on-accent); filter: brightness(1.08); }
   font-family: var(--font-write); font-size: 30px; font-weight: 600; letter-spacing: -.01em;
   font-variant-numeric: tabular-nums;
 }
+
+/* credits + privacy modals — same editorial treatment as the progress panel */
+#credits-modal .modal, #privacy-modal .modal { position: relative; overflow: hidden; }
+#credits-modal .modal::before, #privacy-modal .modal::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 130px; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%);
+}
+#credits-modal .modal > *, #privacy-modal .modal > * { position: relative; }
+#credits-modal .credits-body h3, #privacy-modal .credits-body h3 { display: flex; align-items: center; gap: 10px; }
+#credits-modal .credits-body h3::before, #privacy-modal .credits-body h3::before {
+  content: ""; width: 18px; height: 2px; border-radius: 2px; background: var(--accent); flex: none;
+}
+#credits-modal .credits-body p:first-of-type strong { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   #end-screen .card.end > *, #end-screen #end-title::after,
